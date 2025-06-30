@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "declaration": true,
-    "declarationDir": "dist/types",
+    "declarationDir": "dist/",
     "outDir": "dist",
     "target": "ES5",
     "module": "ESNext",
@@ -12,5 +12,5 @@
     "skipLibCheck": true,
     "isolatedModules": true
   },
-  "include": ["components", "styles", "index.ts"]
+  "include": ["components", "types", "styles", "index.ts"]
 }
