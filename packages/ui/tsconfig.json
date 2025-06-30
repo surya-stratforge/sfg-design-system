@@ -1,16 +1,17 @@
 {
   "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Node",
     "declaration": true,
+    "emitDeclarationOnly": true,
     "declarationDir": "dist/",
     "outDir": "dist",
-    "target": "ES5",
-    "module": "ESNext",
     "lib": ["DOM", "ESNext"],
     "jsx": "react",
     "esModuleInterop": true,
-    "moduleResolution": "node",
     "skipLibCheck": true,
     "isolatedModules": true
   },
-  "include": ["components", "types", "styles", "index.ts"]
+  "include": ["index.ts", "components", "styles", "types"]
 }
