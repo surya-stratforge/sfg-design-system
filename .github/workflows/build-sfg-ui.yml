@@ -50,7 +50,7 @@ jobs:
           git config user.email "actions@github.com"
 
           git add .
-          git commit -m "release: @sfg/ui v$VERSION"
+          git commit -m "release: @stratforge/ui v$VERSION"
 
           git branch -M ui
           git tag -f "v$VERSION"

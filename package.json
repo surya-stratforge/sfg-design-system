@@ -1,5 +1,5 @@
 {
-  "name": "sfg-design-system",
+  "name": "stratforge-design-system",
   "private": true,
   "version": "0.0.1",
   "packageManager": "yarn@1.22.22",
@@ -10,7 +10,7 @@
   "scripts": {
     "dev": "turbo run dev",
     "build": "turbo run build",
-    "build:ui": "turbo run build --filter=@sfg/ui",
+    "build:ui": "turbo run build --filter=@stratforge/ui",
     "build:demo": "turbo run build --filter=demo"
   },
   "devDependencies": {

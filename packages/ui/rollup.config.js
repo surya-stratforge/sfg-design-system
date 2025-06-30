@@ -2,6 +2,8 @@ import typescript from "@rollup/plugin-typescript";
 import resolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
 import postcss from "rollup-plugin-postcss";
+import tailwindcss from "@tailwindcss/postcss";
+import autoprefixer from "autoprefixer";
 
 export default {
   input: "index.ts",
@@ -19,8 +21,9 @@ export default {
     commonjs(),
     typescript({ tsconfig: "./tsconfig.json" }),
     postcss({
-      extract: true,
+      extract: "styles/index.css",
       modules: false,
+      plugins: [tailwindcss(), autoprefixer()],
     }),
   ],
 };
