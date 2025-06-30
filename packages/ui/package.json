@@ -2,19 +2,15 @@
   "name": "@sfg/ui",
   "version": "0.1.0",
   "main": "dist/index.js",
-  "module": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "sideEffects": false,
+  "types": "dist/types/index.d.ts",
+  "files": ["dist"],
   "exports": {
     ".": {
       "import": "./dist/index.js",
-      "require": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "types": "./dist/types/index.d.ts"
     }
   },
-  "files": [
-    "dist"
-  ],
+  "sideEffects": false,
   "license": "MIT",
   "scripts": {
     "build": "rollup -c",
