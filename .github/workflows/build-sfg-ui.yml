@@ -1,0 +1,48 @@
+name: Build and Tag UI Package (Yarn)
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to tag (e.g. 1.2.3)'
+        required: true
+
+jobs:
+  build-ui:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build UI package via Turbo
+        run: yarn build:ui
+
+      - name: Commit dist folder and tag
+        run: |
+          cd packages/ui
+          VERSION=${{ github.event.inputs.version }}
+
+          # Optional: bump version inside package.json
+          yarn version --new-version $VERSION --no-git-tag-version
+
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+
+          git add dist -f
+          git commit -m "chore(ui): build dist for v$VERSION [skip ci]" || echo "No changes to commit"
+
+          git tag -f "v$VERSION"
+          git push origin HEAD
+          git push origin "v$VERSION" --force
