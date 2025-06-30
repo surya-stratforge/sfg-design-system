@@ -1,15 +1,9 @@
-name: Build and Tag UI Package (Yarn)
+name: Publish UI to `ui` branch
 
 permissions:
   contents: write
 
 on:
-  push:
-    branches:
-      - master
-    paths:
-      - "packages/ui/**"
-
   workflow_dispatch:
     inputs:
       version:
@@ -17,43 +11,50 @@ on:
         required: true
 
 jobs:
-  build-ui:
+  publish-ui:
     runs-on: ubuntu-latest
-    if: "!contains(github.event.head_commit.message, '[skip ci]')"
 
     steps:
-      - name: Checkout repo
+      - name: Checkout monorepo
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Set up Node
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: "yarn"
+          cache: yarn
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Build UI package via Turbo
+      - name: Build UI package
         run: yarn build:ui
 
-      - name: Commit dist folder and tag
+      - name: Prepare clean UI package folder
         run: |
-          cd packages/ui
+          mkdir -p publish
+          cp -r packages/ui/dist publish/dist
+          cp packages/ui/package.json publish/
+          [ -f packages/ui/README.md ] && cp packages/ui/README.md publish/ || true
+
+      - name: Push to `ui` branch and tag
+        run: |
           VERSION=${{ github.event.inputs.version }}
+          cd publish
 
-          # Optional: bump version inside package.json
-          yarn version --new-version $VERSION --no-git-tag-version
-
+          git init
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
 
-          git add dist -f
-          git commit -m "chore(ui): build dist for v$VERSION [skip ci]" || echo "No changes to commit"
+          git add .
+          git commit -m "release: @sfg/ui v$VERSION"
 
+          git branch -M ui
           git tag -f "v$VERSION"
-          git push origin HEAD
-          git push origin "v$VERSION" --force
+
+          git remote add origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+          git push -f origin ui
+          git push -f origin v$VERSION
